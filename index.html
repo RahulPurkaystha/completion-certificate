@@ -20,7 +20,7 @@
   <p id="output"></p>
 
   <script>
-    const scriptURL = 'AKfycbzHPlqqrmtW97WylzhGyZOwgRtAf3tTdVVz-rsBddxl1In5miC-t6Ft0wrNNOZ3azBL9w';
+    const scriptURL = 'AKfycbya6k5eX6LQsQI-D4aZ4XKwyCami8Z66u0CFP1IdgHnO3BMC7YiX3ru29k1Vlc0vypBMA';
 
     document.getElementById('certForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -36,7 +36,8 @@
         });
         const json = await res.json();
         if (json.success) {
-          document.getElementById('output').innerHTML = `✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
+          document.getElementById('output').innerHTML =
+            `✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
         } else {
           document.getElementById('output').textContent = '❌ Error: ' + json.error;
         }
@@ -47,4 +48,3 @@
   </script>
 </body>
 </html>
-
