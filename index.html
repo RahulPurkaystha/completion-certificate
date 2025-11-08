@@ -1,37 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Certificate Form</title>
+  <meta charset="UTF-8">
+  <title>Certificate Registration</title>
+  <style>
+    body { font-family: Arial; text-align:center; margin-top:50px; }
+    form { display:inline-block; }
+    input { display:block; margin:10px auto; padding:10px; width:250px; }
+    button { padding:10px 20px; cursor:pointer; }
+  </style>
 </head>
 <body>
+  <h2>Get Your Certificate</h2>
   <form id="certForm">
-    <input type="text" name="name" placeholder="Your name" required />
-    <input type="email" name="email" placeholder="Your email" required />
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
     <button type="submit">Submit</button>
   </form>
-
-  <p id="result"></p>
+  <p id="output"></p>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwA4xwHIlgx1ycmSZFM8cFvVfhVt85n3zxLopShxDDNM9yJPWRmPBwoddH9AT2i8LHP/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzgof_HCAOskvbwSqVUoIF2LmjIpDm6TpoLppSu6PoYI5jLZTeubDee3YTqWDVkOPfQLQ/exec';
 
-    document.getElementById('certForm').addEventListener('submit', e => {
+    document.getElementById('certForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      })
-      .then(res => res.json())
-      .then(response => {
-        document.getElementById('result').innerHTML = `
-          ✅ Submitted!<br>
-          <a href="${response.certificate}" target="_blank">Download Certificate</a>
-        `;
-      })
-      .catch(err => alert('Error: ' + err));
+      document.getElementById('output').textContent = 'Submitting...';
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        if (json.success) {
+          document.getElementById('output').innerHTML =
+            `✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
+        } else {
+          document.getElementById('output').textContent = '❌ Error: ' + json.error;
+        }
+      } catch (err) {
+        document.getElementById('output').textContent = '❌ ' + err;
+      }
     });
   </script>
 </body>
