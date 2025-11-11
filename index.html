@@ -35,17 +35,18 @@
         });
         const json = await res.json();
         if (json.success) {
-          document.getElementById('output').innerHTML = `
-  ✅ Certificate ready! 
-  <a href="${json.certificate}" download 
-     class="btn btn-primary mt-2" 
-     target="_blank">
-    ⬇️ Download Certificate
-  </a>
-`;
-
-          //document.getElementById('output').innerHTML =
-         // `✅ Certificate ready! <a href="${json.certificate}" download target="_blank">Download Certificate</a>`;
+          document.getElementById('output').innerHTML =
+         `✅ Certificate ready! <a id="downloadLink" href="${json.certificate}" download target="_blank">Download Certificate</a>`;
+          const downloadLink = document.getElementById('downloadLink');
+          downloadLink.addEventListener('click', function (e) {
+          e.preventDefault(); // prevent opening in a new tab
+          const link = document.createElement('a');
+          link.href = json.certificate;
+          link.download = ''; // optional: specify filename like 'certificate.pdf'
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+});
           } else {
           document.getElementById('output').textContent = '❌ Error: ' + json.error;
           }
@@ -56,6 +57,7 @@
   </script>
 </body>
 </html>
+
 
 
 
