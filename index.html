@@ -1,60 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Certificate Registration</title>
+  <title>Certificate Generator</title>
   <style>
-    body { font-family: Arial; text-align:center; margin-top:50px; }
-    form { display:inline-block; }
-    input { display:block; margin:10px auto; padding:10px; width:250px; }
-    button { padding:10px 20px; cursor:pointer; }
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input, select { margin: 5px; padding: 8px; width: 200px; }
+    button { padding: 10px 20px; cursor: pointer; }
+    #certificate { display: none; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <h2>Get Your Certificate</h2>
-  <form id="certForm">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <button type="submit">Submit</button>
+
+  <h2>Online Certificate Generator</h2>
+  <form id="certificateForm">
+    <input type="text" id="name" placeholder="Your Name" required><br>
+    <input type="email" id="email" placeholder="Your Email" required><br>
+    <input type="text" id="course" placeholder="Course Name" required><br>
+    <button type="submit">Generate Certificate</button>
   </form>
-  <p id="output"></p>
 
+  <canvas id="certificate" width="800" height="600"></canvas>
+  <br>
+  <button id="downloadBtn" style="display:none;">Download Certificate</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyAB1PJvQ_0iHUM8AnWOT7B67-e_UGnFZnjVBu07K5yffE2ojfoP1450bt9ZgY76VSxWQ/exec';
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyAB1PJvQ_0iHUM8AnWOT7B67-e_UGnFZnjVBu07K5yffE2ojfoP1450bt9ZgY76VSxWQ/exec";
 
-    document.getElementById('certForm').addEventListener('submit', async (e) => {
+    document.getElementById("certificateForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const course = document.getElementById("course").value;
 
-      document.getElementById('output').textContent = 'Submitting...';
-      try {
-        const res = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        if (json.success) {
-          document.getElementById('output').innerHTML =
-         `✅ Certificate ready! <a href="${json.certificate}" download target="_blank">Download Certificate</a>`;
-          } else {
-          document.getElementById('output').textContent = '❌ Error: ' + json.error;
-          }
-        } catch (err) {
-        document.getElementById('output').textContent = '❌ ' + err;
-      }
+      // Send data to Google Sheet
+      await fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ name, email, course }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      // Generate certificate
+      const canvas = document.getElementById("certificate");
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#f0f0f0";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "#333";
+      ctx.fillText("Certificate of Completion", 200, 200);
+      ctx.font = "24px Arial";
+      ctx.fillText(`This certifies that ${name}`, 180, 300);
+      ctx.fillText(`has successfully completed ${course}`, 180, 350);
+      ctx.font = "18px Arial";
+      ctx.fillText("Issued on: " + new Date().toLocaleDateString(), 250, 450);
+
+      document.getElementById("certificate").style.display = "block";
+      document.getElementById("downloadBtn").style.display = "inline-block";
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const canvas = document.getElementById("certificate");
+      const link = document.createElement('a');
+      link.download = 'certificate.png';
+      link.href = canvas.toDataURL();
+      link.click();
     });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
