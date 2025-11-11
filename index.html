@@ -37,8 +37,9 @@
         if (json.success) {
           document.getElementById('output').innerHTML = `
   ✅ Certificate ready! 
-  <a href="${json.certificate}" download target="_blank" 
-     style="display:inline-block; margin-left:8px; padding:8px 16px; background-color:#007BFF; color:white; text-decoration:none; border-radius:5px;">
+  <a href="${json.certificate}" download 
+     class="btn btn-primary mt-2" 
+     target="_blank">
     ⬇️ Download Certificate
   </a>
 `;
@@ -55,6 +56,7 @@
   </script>
 </body>
 </html>
+
 
 
 
