@@ -36,16 +36,26 @@
         });
         const json = await res.json();
         if (json.success) {
-          document.getElementById('output').innerHTML =
-            `✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
-        } else {
-          document.getElementById('output').textContent = '❌ Error: ' + json.error;
-        }
-      } catch (err) {
-        document.getElementById('output').textContent = '❌ ' + err;
+          const a = document.createElement('a');
+  a.href = json.certificate;
+  a.download = 'Certificate.pdf'; // Change as needed
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  document.getElementById('output').innerHTML =
+    '✅ Your certificate has been downloaded!';
+          //document.getElementById('output').innerHTML =
+            //`✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
+     //   } else {
+      //    document.getElementById('output').textContent = '❌ Error: ' + json.error;
+      //  }
+    //  } catch (err) {
+      //  document.getElementById('output').textContent = '❌ ' + err;
       }
     });
   </script>
 </body>
 </html>
+
 
