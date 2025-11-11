@@ -37,15 +37,22 @@
         if (json.success) {
           document.getElementById('output').innerHTML =
          `✅ Certificate ready! <a id="downloadLink" href="${json.certificate}" download target="_blank">Download Certificate</a>`;
-          const downloadLink = document.getElementById('downloadLink');
-          downloadLink.addEventListener('click', function (e) {
-          e.preventDefault(); // prevent opening in a new tab
-          const link = document.createElement('a');
-          link.href = json.certificate;
-          link.download = ''; // optional: specify filename like 'certificate.pdf'
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          document.getElementById('downloadLink').addEventListener('click', function (e) {
+  e.preventDefault(); // stop default new tab behavior
+
+  const fileUrl = json.certificate;
+  
+  // Get file extension (e.g., .pdf or .jpg)
+  const fileExtension = fileUrl.split('.').pop().toLowerCase();
+  const fileName = `certificate.${fileExtension}`;
+
+  // Create a hidden <a> element for download
+  const link = document.createElement('a');
+  link.href = fileUrl;
+  link.download = fileName; // forces the browser to save as fileName
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 });
           } else {
           document.getElementById('output').textContent = '❌ Error: ' + json.error;
@@ -57,6 +64,7 @@
   </script>
 </body>
 </html>
+
 
 
 
