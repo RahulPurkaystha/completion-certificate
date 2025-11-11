@@ -29,7 +29,7 @@
 
       document.getElementById('output').textContent = 'Submitting...';
 
-      try {
+     /* try {
         const res = await fetch(scriptURL, {
           method: 'POST',
           body: JSON.stringify(data)
@@ -44,10 +44,37 @@
         } catch (err) {
         document.getElementById('output').textContent = '❌ ' + err;
       }
-    });
+    });*/
+      try {
+  const res = await fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+  const json = await res.json();
+
+  if (json.success) {
+    // Create a download link element
+    const downloadLink = document.createElement('a');
+    downloadLink.href = json.certificate;  // URL from your Apps Script
+    downloadLink.download = 'Certificate.pdf'; // Change name if needed
+    downloadLink.textContent = '⬇️ Download Certificate';
+    downloadLink.style.display = 'block';
+    downloadLink.style.marginTop = '10px';
+
+    document.getElementById('output').innerHTML = '✅ Certificate ready!';
+    document.getElementById('output').appendChild(downloadLink);
+  } else {
+    document.getElementById('output').textContent = '❌ Error: ' + json.error;
+  }
+
+} catch (err) {
+  document.getElementById('output').textContent = '❌ ' + err;
+}
+
   </script>
 </body>
 </html>
+
 
 
 
