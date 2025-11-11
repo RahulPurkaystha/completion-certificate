@@ -36,7 +36,7 @@
         const json = await res.json();
         if (json.success) {
           document.getElementById('output').innerHTML =
-          `✅ Certificate ready! <a href="${json.certificate}" target="_blank">View Certificate</a>`;
+          `✅ Certificate ready! <a href="${json.certificate}" download target="_blank">Download Certificate</a>`;
           } else {
           document.getElementById('output').textContent = '❌ Error: ' + json.error;
           }
@@ -47,6 +47,7 @@
   </script>
 </body>
 </html>
+
 
 
 
